@@ -5,7 +5,7 @@ import plotly.express as px
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, LeaveOneOut
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeRegressor
@@ -57,7 +57,17 @@ lin_reg.fit(wine_prepared,wine_labels)
 wine_pred = lin_reg.predict(wine_prepared)
 lin_mse = mean_squared_error(wine_labels, wine_pred)
 lin_rmse = np.sqrt(lin_mse)
-print(f"Linear Regression RMSE: {lin_rmse}")
+print(f"Linear Regression RMSE for Train Set: {lin_rmse}")
+
+# Testing on Test Set
+wine_test = test_set.drop("1", axis=1)
+wine_test_labels = test_set["1"].copy()
+wine_test_prepared = full_pipeline.transform(wine_test)
+wine_pred = lin_reg.predict(wine_test_prepared)
+lin_mse = mean_squared_error(wine_test_labels, wine_pred)
+lin_rmse = np.sqrt(lin_mse)
+print(f"Linear Regression RMSE for Test Set: {lin_rmse}")
+
 
 
 # Logistic Regression
@@ -66,7 +76,17 @@ lg_reg.fit(wine_prepared, wine_labels)
 lg_pred = lg_reg.predict(wine_prepared)
 lg_mse = mean_squared_error(wine_labels, lg_pred)
 lg_rmse = np.sqrt(lg_mse)
-print(f"Logistic Regression RMSE: {lg_rmse}")
+print(f"Logistic Regression RMSE for Train Set: {lg_rmse}")
+
+# Testing on Test Set
+wine_test = test_set.drop("1", axis=1)
+wine_test_labels = test_set["1"].copy()
+wine_test_prepared = full_pipeline.transform(wine_test)
+lg_pred = lg_reg.predict(wine_test_prepared)
+lg_mse = mean_squared_error(wine_test_labels, lg_pred)
+lg_rmse = np.sqrt(lg_mse)
+print(f"Logistic Regression RMSE for Test Set: {lg_rmse}")
+
 
 
 
@@ -76,7 +96,22 @@ tree_reg.fit(wine_prepared, wine_labels)
 tree_pred = tree_reg.predict(wine_prepared)
 tree_mse = mean_squared_error(wine_labels, tree_pred)
 tree_rmse = np.sqrt(tree_mse)
-print(f"Decision Tree Regression RMSE: {tree_rmse}")
+print(f"Decision Tree Regression RMSE for Train Set: {tree_rmse}")
+
+# Testing on Test Set
+wine_test = test_set.drop("1", axis=1)
+wine_test_labels = test_set["1"].copy()
+wine_test_prepared = full_pipeline.transform(wine_test)
+tree_pred = tree_reg.predict(wine_test_prepared)
+tree_mse = mean_squared_error(wine_test_labels, tree_pred)
+tree_rmse = np.sqrt(tree_mse)
+print(f"Decision Tree Regression RMSE for Test Set: {tree_rmse}")
+
+
+
+
+
+
 
 
 
@@ -84,7 +119,8 @@ print(f"Decision Tree Regression RMSE: {tree_rmse}")
 # I also read some of the materials on the web about how to code nicely in machine learning and python
 # But mostly I read two chapters of the book named "Hands-On Machine Learning with scikit-learn and tensorflow"
 # I reallu learned a lot by reading this book, especially the concepts in preprocessing section. That was so practical
-# As the results show , for Linear Regression the error is 0.2 which is high, partly because I chose a model (LR) which is not best filt for this problem
-# becuase label valuse are not continuous
-# But in Decision Tree Regression and Logistic Regression, the error is 0.0
-
+# As the results show, for Linear Regression the error is 0.2 which is high, partly because I chose a model (LR) which is not best fit for this problem
+# becuase label valuse are not continuous - The test error for linear regression is 0.3
+# But in logistic regression, which is good for classification, the test error is 0.3
+# For Decision Tree Regression, the test error is 0.4
+# We cannot expect to have good results because I think we have short in the number of data!
